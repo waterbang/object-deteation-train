@@ -1,0 +1,32 @@
+item {
+    id:1
+    name:'car'
+}
+item {
+    id:2
+    name:'zebra crossing'
+}
+item {
+    id:3
+    name:'red light'
+}
+item {
+    id:4
+    name:'person'
+}
+item {
+    id:5
+    name:'sidewalk'
+}
+item {
+    id:6
+    name:'bicycle'
+}
+item {
+    id:7
+    name:'yellow light'
+}
+item {
+    id:8
+    name:'green light'
+}
