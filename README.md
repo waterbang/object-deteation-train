@@ -7,53 +7,104 @@
 -   ├── annotations --->存放转换的TFRcords
 -   ├── cocoapi ---> cocoapi
 -   ├── exported-models ---> 导出的模型准备放这里
--   ├── images ---> 标记的图片 train and test
+-   ├── images ---> 标记的图片train and test
+        |—— train
+        |—— test 
 -   ├── model ---> 训练模型的目录
 -   ├── models ---> tensorflow Object deteation API
 -   └── pre-trained-models ---> tensorflow Object deteation model
 
-## How to use
+## 开始
+
+前置条件： labelImg 和 docker，有两种构建方法。
+
+
+### 标记对象
+使用[labelImg](https://github.com/tzutalin/labelImg), 标注对象，并保存xml，类似于：
+![labelImg](https://xdtnyimg.waterbang.top/object-deteation.png)
+
+### 准备映射训练集
+收集完，将其放在任意目录下，训练集和测试集都放。比例自己决定。
+
+### 本地构建
+
+```
+git clone https://github.com/waterbang/object-deteation-train.git
+```
+
+### 创建映射容器
 使用docker 构建以解决环境问题。运行：
 ```
 docker build -t object-deteation:train .
 ```
-使用数据卷替换容器images目录，以便于对数据集进行操作。
 
-### Collect the graphics you want
-收集完，将其放在images的目录下，训练集和测试集都放。
+### docker hub 拉取
+拉镜像
+```
+docker pull waterbang/object-deteation
+```
 
-### Annotated image object
-使用[labelImg](https://github.com/tzutalin/labelImg), 标注对象，并保存xml
-![labelImg]()
+## 运行容器
 
-文件到目录下。（数据尽量多一点，这步最麻烦）。
+使用本地目录映射替到容器内images目录，以便于对数据集进行操作。
+>注意：以下目录对应您的训练集和测试集目录，请修改成您的。
+>/Users/waterbang/Desktop/tensorflow/dog/data/images
 
+```
+docker run -it --name object-deteation -v /Users/waterbang/Desktop/tensorflow/dog/data/images:/env/images object-deteation:train bash
+```
+显示如下：
+![tensorflow](https://xdtnyimg.waterbang.top/tensorflow-cmd.png)
+
+## 构建并训练(如果您已经有TFRcords跳过此步)
+进入 /Python 目录
 ### xml transform csv
-
-在 Python 目录下运行, 记得打开此文件，修改文件目录
+先打开，`xml_to_csv.py`，修改 xml文件夹地址 和 生成csv文件地址。
+记得训练集和测试集都需要转换。
+在 Python 目录下运行。
 ``` shell
 python ./xml_to_csv.py 
 ```
 
 ### csv transform TFRcords
-在 Python 目录下运行.(建议使用绝对路径)
+
+1.  修改标签对应的种类数字
+2.  修改文件第110行，填入数据集地址
+
+在 Python 目录下运行.(使用绝对路径)
 
 ``` shell
-python csv_to_TFRcords.py --csv_input=/Users/waterbang/Desktop/tensorflow/dog/images/train/zebraCrossing/train_zebraCrossing.csv   --output_path=/Users/waterbang/Desktop/tensorflow/dog/annotations/test.record
+python csv_to_TFRcords.py --csv_input=/env/images/train/train.csv   --output_path=/env/annotations/train.record
+
+python csv_to_TFRcords.py --csv_input=/env/images/test/test.csv   --output_path=/env/annotations/test.record
 ```
 
 ### Training model
-在 `model_main_tf2.py`同级目录下运行：
+
+#### 先修改您的对象种类
+```
+vim /env/annotations/label_map.pbtxt
+```
+
+在 `model_main_tf2.py`同级目录下运行（/env）：
 
 ```
 python model_main_tf2.py --model_dir=./models/ssd_resnet50_v1_fpn --pipeline_config_path=./models/ssd_resnet50_v1_fpn/pipeline.config
 
 ```
 
-## If you encounter an error
-1.  请检查脚本文件路径。
+## 辅助脚本
+帮您将相同大小的数据转换成xml：
+`/env/node/png_to_xml.js`
 
-2.  使用dockerfile构建，能解决环境问题（都帮你安排好了）。
+批量移动文件，方便分割测试集和训练集：
+`/env/node/more_test.sh`
+
+删除一个文件夹下所有的xml文件
+`/env/Python/delete_xml.py`
+
+## 如果遇到了错误
+1.  请检查脚本文件路径。
 
 3.  使用python3。
 
