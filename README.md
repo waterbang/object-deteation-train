@@ -1,5 +1,5 @@
 # object-deteation-train
-对象检测模型训练
+对象检测模型训练,此仓库已经集成了cocoAPI，Object deteationAPI等环境，让您开箱即用。
 
 ## dircetory
 -   .
@@ -16,7 +16,7 @@
 
 ## 开始
 
-前置条件： labelImg 和 docker，有两种构建方法。
+前置条件： labelImg 和 docker。
 
 
 ### 标记对象
@@ -24,8 +24,7 @@
 ![labelImg](https://xdtnyimg.waterbang.top/object-deteation.png)
 
 ### 准备映射训练集
-收集完，将其放在任意目录下，训练集和测试集都放。比例自己决定。
-
+收集完，将其放在任意目录下，训练集和测试集都放。比例自己决定。此项目提供了两种构建方法，推荐docker hub，因为它可以让您在服务器上训练，解放您的本地资源。
 ### 本地构建
 
 ```
