@@ -20,7 +20,7 @@
 
 
 ### 标记对象
-使用[labelImg](https://github.com/tzutalin/labelImg), 标注对象，并保存xml，类似于：
+使用[labelImg](https://github.com/tzutalin/labelImg), 标注对象，并保存xml.类似于：
 ![labelImg](https://xdtnyimg.waterbang.top/object-deteation.png)
 
 ### 准备映射训练集

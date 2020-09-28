@@ -1,0 +1,16 @@
+item {
+    id:1
+    name:'car'
+}
+item {
+    id:2
+    name:'person'
+}
+item {
+    id:3
+    name:'red light'
+}
+item {
+    id:4
+    name:'green light'
+}
