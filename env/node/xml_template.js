@@ -61,3 +61,4 @@ const xml_template = function (file){
     }
 }
 module.exports = xml_template
+// pre-trained-models/ssd_resnet50_v1_fpn

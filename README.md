@@ -1,7 +1,7 @@
 # object-deteation-train
 对象检测模型训练,此仓库已经集成了cocoAPI，Object deteationAPI等环境，让您开箱即用。
 
->  建议在服务器上使用此镜像，因为模型训练将耗费大量时间。(It is recommended to use this mirror on the server, because the model training will consume a lot of time.)
+>  建议在本地使用此镜像，因为模型训练将耗费大量内存，会出现资源耗尽。(It is recommended to use this mirror on the server, because the model training will consume a lot of time.)
 
 ## dircetory
 -   .
@@ -23,7 +23,7 @@
 
 ### 标记对象 (Tag object)
 使用[labelImg](https://github.com/tzutalin/labelImg), 标注对象，并保存xml.类似于：
-![labelImg](https://xdtnyimg.waterbang.top/object-deteation.png)
+![labelImg](http://qiniu-waterbang.waterbang.top/object-deteation.png)
 
 ### 准备映射训练集 (Prepare the mapping training set)
 收集完，将其放在任意目录下，训练集和测试集都放。比例自己决定。此项目提供了两种构建方法，推荐docker hub，因为它可以让您在服务器上训练，解放您的本地资源。
@@ -47,10 +47,10 @@ docker pull waterbang/object-deteation
 >/Users/waterbang/Desktop/tensorflow/dog/data/images
 
 ```
-docker run -it --name object-deteation -v /Users/waterbang/Desktop/tensorflow/dog/data/images:/env/images waterbang/object-deteation:latest bash
+docker run -it --name object-deteation -v /root/tensorflow/images:/env/images waterbang/object-deteation:latest bash
 ```
 显示如下：
-![tensorflow](https://xdtnyimg.waterbang.top/tensorflow-cmd.png)
+![tensorflow](http://qiniu-waterbang.waterbang.top/tensorflow-cmd.png)
 
 > 如果您第二次进入运行：
 >docker exec -it object-deteation bash
@@ -163,7 +163,7 @@ eval_input_reader {
 在 `model_main_tf2.py`同级目录下运行（/env）：
 
 ```
-python model_main_tf2.py --model_dir=./model/ssd_resnet50_v1_fpn --pipeline_config_path=./model/my_ssd_resnet50_v1_fpn/pipeline.config
+python model_main_tf2.py --model_dir=./pre-trained-models/ssd_resnet50_v1_fpn --pipeline_config_path=./model/my_ssd_resnet50_v1_fpn/pipeline.config
 
 ```
 
@@ -179,6 +179,12 @@ python model_main_tf2.py --model_dir=./model/ssd_resnet50_v1_fpn --pipeline_conf
 
 ## 如果遇到了错误
 1.  请检查脚本文件路径。
+
+### 2.如果出现 Illegal instruction (core dumped)
+那么可能您的cpu较老，不支持AVX指令。您可以运行以下命令确认，是否有输出` -mavx -mavx2` ，如果缺少则可以确认缺少AVX支持。
+```
+grep flags -m1 /proc/cpuinfo | cut -d ":" -f 2 | tr '[:upper:]' '[:lower:]' | { read FLAGS; OPT="-march=native"; for flag in $FLAGS; do case "$flag" in "sse4_1" | "sse4_2" | "ssse3" | "fma" | "cx16" | "popcnt" | "avx" | "avx2") OPT+=" -m$flag";; esac; done; MODOPT=${OPT//_/\.}; echo "$MODOPT"; }
+``` 
 
 3.  使用python3。
 

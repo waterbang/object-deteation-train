@@ -3,3 +3,4 @@ data/
 
 env/annotations/*.record
 env/pre-trained-models
+env/exported-models

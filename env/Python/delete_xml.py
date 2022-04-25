@@ -21,5 +21,5 @@ def del_files(path):
 
 # test
 if __name__ == "__main__":
-    path = '/Users/waterbang/Desktop/tensorflow/dog/images/test/campus'
+    path = '/Users/waterbang/Desktop/tensorflow/dog/data/images/train/campus'
     del_files(path)
